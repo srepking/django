@@ -14,9 +14,7 @@ class PostAdmin(admin.ModelAdmin):
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    inlines = [
-        CategoryInLine
-    ]
+
     exclude = ('posts',)
 
 
