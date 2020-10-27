@@ -3,5 +3,22 @@ from django.contrib import admin
 from blogging.models import Post, Category
 
 
-admin.site.register(Post)
-admin.site.register(Category)
+class CategoryInLine(admin.TabularInline):
+    model = Category.posts.through
+
+
+class PostAdmin(admin.ModelAdmin):
+    inlines = [
+        CategoryInLine,
+    ]
+
+
+class CategoryAdmin(admin.ModelAdmin):
+    inlines = [
+        CategoryInLine
+    ]
+    exclude = ('posts',)
+
+
+admin.site.register(Post, PostAdmin)
+admin.site.register(Category, CategoryAdmin)
