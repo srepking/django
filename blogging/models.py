@@ -2,6 +2,11 @@ from django.db import models
 
 from django.contrib.auth.models import User
 
+#For adding the RSS Feed
+from django.contrib.syndication.views import Feed
+from django.urls import reverse
+
+
 class Post(models.Model):
     title = models.CharField(max_length=128)
     text = models.TextField(blank=True)
@@ -25,3 +30,26 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+
+#Creating the RSS Feed
+
+class RecentPosts(Feed):
+    title = "Latest Blog Entries"
+    link = "/latest/"
+    description = "Updates to the blog"
+
+    def items(self):
+        return Post.objects.order_by('published_date')
+
+    def item_title(self, item):
+        return item.title
+
+    def item_author(self, item):
+        return item.author
+
+    def item_date(self, item):
+        return item.created_date
+
+    def item_link(self,item):
+        return reverse('blog_detail', args=[item.pk])
